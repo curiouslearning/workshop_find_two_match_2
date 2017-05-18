@@ -4,53 +4,71 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   AppRegistry,
   StyleSheet,
   Text,
   View
-} from 'react-native';
+} from "react-native";
+
+import AnimatedSprite from "react-native-animated-sprite";
+import catSprite from "./sprites/cat/catSprite";
 
 export default class AwesomeProject extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-        <Text>
-          Why did this work so much easier on windows than ubuntu???
-        </Text>
-      </View>
-    );
-  }
+    constructor() {
+        super();
+        this.state = {
+            animationType: "NORMAL"
+        };
+    }
+
+    // toggles whether the cat is angry
+    onPress () {
+        this.setState({ animationType: (this.state.animationType == "NORMAL" ? "ANGRY" : "NORMAL")});
+    }
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.welcome}>
+                    Welcome to the Awesome Cat App!!!
+                </Text>
+                <AnimatedSprite
+                    ref="catRef"
+                    sprite={catSprite}
+                    animationFrameIndex={catSprite.animationIndex(this.state.animationType)}
+                    loopAnimation={true}
+                    coordinates={{top:100, left: 50}}
+                    size={catSprite.size}
+                    onPress={() => {this.onPress();}}
+                />
+                <AnimatedSprite
+                    ref="catRef2"
+                    sprite={catSprite}
+                    animationFrameIndex={catSprite.animationIndex("ANGRY")}
+                    loopAnimation={true}
+                    coordinates={{top:300, left: 50}}
+                    size={catSprite.size}
+                    draggable={true}
+                />
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF",
   },
   welcome: {
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
     margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  }
 });
 
-AppRegistry.registerComponent('AwesomeProject', () => AwesomeProject);
+AppRegistry.registerComponent("AwesomeProject", () => AwesomeProject);
