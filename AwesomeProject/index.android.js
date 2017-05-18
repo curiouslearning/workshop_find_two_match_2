@@ -42,6 +42,15 @@ export default class AwesomeProject extends Component {
                     coordinates={{top:100, left: 50}}
                     size={catSprite.size}
                     onPress={() => {this.onPress();}}
+                    tweenOptions ={{
+                        tweenType: "sine-wave",
+                        startXY: [50, 100],
+                        xTo: [100, 150, 100, 50],
+                        yTo: [100, 100, 100, 100],
+                        duration: 1000,
+                        loop: true
+                    }}
+                    tweenStart="fromMount"
                 />
                 <AnimatedSprite
                     ref="catRef2"
