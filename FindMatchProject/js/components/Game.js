@@ -11,6 +11,7 @@ import {
 
 import AnimatedSprite from "react-native-animated-sprite";
 import catSprite from "../sprites/cat/catSprite";
+import Half from "./Half";
 
 class Game extends Component {
     constructor() {
@@ -21,13 +22,16 @@ class Game extends Component {
     }
 
     render() {
+        const CONTENT = this.props.navigation.state.params.content;
+        const LEFT = CONTENT.left;
+        const RIGHT = CONTENT.right;
         return (
             <View style={styles.containerView}>
                 <View style={styles.leftView}>
-                    <Text>Game</Text>
+                    {LEFT.map(obj => <Half obj={obj} key={obj.object_id} />)}
                 </View>
                 <View style={styles.rightView}>
-                    <Text>Such a game</Text>
+                    {RIGHT.map(obj => <Half obj={obj} key={obj.object_id} />)}
                 </View>
                 <AnimatedSprite
                     ref="cat"

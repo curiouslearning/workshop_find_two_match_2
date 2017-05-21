@@ -13,6 +13,50 @@ import {
 import AnimatedSprite from "react-native-animated-sprite";
 import catSprite from "../sprites/cat/catSprite";
 
+const CONTENT = {
+    trial_num: 0,
+    left: [
+        {
+            object_id: 1,
+            target: "a",
+            pos: [20, 100],
+            pair_id: [4]
+        },
+        {
+            object_id: 2,
+            target: "e",
+            pos: [80, 200],
+            pair_id: [5]
+        },
+        {
+            object_id: 3,
+            target: "u",
+            pos: [170, 50],
+            pair_id: [6]
+        }
+    ],
+    right: [
+        {
+            object_id: 4,
+            target: "a",
+            pos: [250, 200],
+            pair_id: [1]
+        },
+        {
+            object_id: 5,
+            target: "e",
+            pos: [100, 100],
+            pair_id: [2]
+        },
+        {
+            object_id: 6,
+            target: "u",
+            pos: [0, 50],
+            pair_id: [3]
+        }
+    ]
+}
+
 class Introduction extends Component {
     constructor() {
         super();
@@ -34,7 +78,7 @@ class Introduction extends Component {
                 <Text style={styles.welcome}>
                     {this.state.text}
                 </Text>
-                <Button title="Game!" onPress={() => navigate("Game")} />
+                <Button title="Game!" onPress={() => navigate("Game", {content: CONTENT})} />
                 <AnimatedSprite
                     ref="catRef"
                     sprite={catSprite}
