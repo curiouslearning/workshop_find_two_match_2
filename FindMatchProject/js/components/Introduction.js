@@ -22,10 +22,6 @@ class Introduction extends Component {
         };
     }
 
-    static navigationOptions = {
-        title: "Introduction" // TODO en español
-    }
-
     // toggles whether the cat is angry
     onPress () {
         this.setState({ animationType: (this.state.animationType == "NORMAL" ? "ANGRY" : "NORMAL")});
@@ -72,7 +68,7 @@ class Introduction extends Component {
 }
 
 const styles = StyleSheet.create({
-        welcome: {
+    welcome: {
         fontSize: 20,
         textAlign: "center",
         margin: 10,
