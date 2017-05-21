@@ -10,6 +10,10 @@ import Game from "./components/Game";
 const FindMatchProject = StackNavigator({
     Introduction: {screen: Introduction},
     Game: {screen: Game}
+}, {
+    navigationOptions: {
+        header: null
+    },
 });
 
 export default FindMatchProject;
