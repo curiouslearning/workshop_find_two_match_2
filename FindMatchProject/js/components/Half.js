@@ -12,13 +12,43 @@ import {
 } from "react-native";
 
 class Half extends Component {
-    componentWillMount() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            top: props.obj.pos[1],
+            left: props.obj.pos[0],
+            isBeingDragged: false
+        };
         this.originalLeft = this.props.obj.pos[0];
         this.originalTop = this.props.obj.pos[1];
-        this.styles = StyleSheet.create({
+        let onPanResponderEnd = () => {
+            this.setState({isBeingDragged: false});
+            console.log("ended");
+        }
+        this.panResponder = PanResponder.create({
+            onStartShouldSetPanResponder: () => true,
+            onMoveShouldSetPanResponder: () => true,
+            onPanResponderGrant: () => {
+                this.setState({isBeingDragged: true});
+                console.log("granted");
+            },
+            onPanResponderMove: (evt, gestureState) => {
+                let {dx, dy} = gestureState;
+                this.setState({
+                    top: this.originalTop + dy,
+                    left: this.originalLeft + dx,
+                });
+            },
+            onPanResponderRelease: onPanResponderEnd,
+            onPanResponderTerminate: onPanResponderEnd
+        });
+    }
+
+    makeStyles() {
+        return StyleSheet.create({
             container: {
-                top: this.props.obj.pos[1],
-                left: this.props.obj.pos[0]
+                top: this.state.top,
+                left: this.state.left
             },
             background: {
                 position: "absolute",
@@ -28,7 +58,7 @@ class Half extends Component {
                 height: 40,
                 backgroundColor: "white",
                 borderRadius: 20,
-                opacity: 0.30
+                opacity: (this.state.isBeingDragged ? 0.70 : 0.30)
             },
             obj: {
                 position: "absolute",
@@ -36,22 +66,14 @@ class Half extends Component {
                 fontSize: 40
             }
         });
-        // TODO make it draggable!!!
-        this.panResponder = PanResponder.create({
-            onStartShouldSetPanResponder: () => true,
-            onMoveShouldSetPanResponder: () => true,
-            onPanResponderGrant: () => true,
-            onPanResponderMove: () => true,
-            onPanResponderRelease: () => true,
-            onPanResponderTerminate: () => true
-        });
     }
 
     render() {
+        let styles = this.makeStyles();
         return (
-            <View style={this.styles.container}>
-                <View style={this.styles.background} />
-                <Text style={this.styles.obj}>
+            <View style={styles.container} {...this.panResponder.panHandlers}>
+                <View style={styles.background} />
+                <Text style={styles.obj}>
                     {this.props.obj.target}
                 </Text>
             </View>
