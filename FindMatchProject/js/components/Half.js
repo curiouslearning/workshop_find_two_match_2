@@ -8,36 +8,50 @@ import {
     View,
     Text,
     PanResponder,
+    Dimensions,
     StyleSheet
 } from "react-native";
+
+const SIZE = 40;
 
 class Half extends Component {
     constructor(props) {
         super(props);
         this.state = {
             top: props.obj.pos[1],
-            left: props.obj.pos[0],
+            left: this.props.leftOffset + props.obj.pos[0],
             isBeingDragged: false
         };
-        this.originalLeft = this.props.obj.pos[0];
+        this.originalLeft = this.props.leftOffset + this.props.obj.pos[0];
         this.originalTop = this.props.obj.pos[1];
         let onPanResponderEnd = () => {
-            this.setState({isBeingDragged: false});
-            console.log("ended");
+            this.setState({
+                isBeingDragged: false,
+                top: this.originalTop,
+                left: this.originalLeft
+            });
         }
         this.panResponder = PanResponder.create({
             onStartShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponder: () => true,
             onPanResponderGrant: () => {
                 this.setState({isBeingDragged: true});
-                console.log("granted");
             },
             onPanResponderMove: (evt, gestureState) => {
                 let {dx, dy} = gestureState;
-                this.setState({
-                    top: this.originalTop + dy,
-                    left: this.originalLeft + dx,
-                });
+                let {width, height} = Dimensions.get("window");
+                var newTop = this.originalTop + dy;
+                var newLeft = this.originalLeft + dx;
+                if (newTop < (height - SIZE) && newTop >= 0) {
+                    this.setState({
+                        top: newTop
+                    });
+                }
+                if (newLeft < (width - SIZE) && newLeft >= 0) {
+                    this.setState({
+                        left: newLeft
+                    });
+                }
             },
             onPanResponderRelease: onPanResponderEnd,
             onPanResponderTerminate: onPanResponderEnd
@@ -47,6 +61,7 @@ class Half extends Component {
     makeStyles() {
         return StyleSheet.create({
             container: {
+                position: "absolute",
                 top: this.state.top,
                 left: this.state.left
             },
@@ -54,16 +69,16 @@ class Half extends Component {
                 position: "absolute",
                 top: 10,
                 left: -10,
-                width: 40,
-                height: 40,
+                width: SIZE,
+                height: SIZE,
                 backgroundColor: "white",
-                borderRadius: 20,
+                borderRadius: SIZE / 2,
                 opacity: (this.state.isBeingDragged ? 0.70 : 0.30)
             },
             obj: {
                 position: "absolute",
                 color: "black",
-                fontSize: 40
+                fontSize: SIZE
             }
         });
     }

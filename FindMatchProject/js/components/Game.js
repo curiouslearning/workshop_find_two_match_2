@@ -4,8 +4,8 @@
 
 import React, {Component} from "react";
 import {
+    Dimensions,
     View,
-    Text,
     StyleSheet
 } from "react-native";
 
@@ -25,22 +25,25 @@ class Game extends Component {
         const CONTENT = this.props.navigation.state.params.content;
         const LEFT = CONTENT.left;
         const RIGHT = CONTENT.right;
+        var screenSize = Dimensions.get("window");
+        var catSize = catSprite.size;
         return (
             <View style={styles.containerView}>
-                <View style={styles.leftView}>
-                    {LEFT.map(obj => <Half obj={obj} key={obj.object_id} />)}
-                </View>
-                <View style={styles.rightView}>
-                    {RIGHT.map(obj => <Half obj={obj} key={obj.object_id} />)}
-                </View>
+                <View style={styles.leftView} />
+                <View style={styles.rightView} />
                 <AnimatedSprite
                     ref="cat"
                     sprite={catSprite}
                     animationFrameIndex={catSprite.animationIndex(this.state.catAnimationType)}
                     loopAnimation={true}
-                    coordinates={{top:200, left: 250}}
-                    size={catSprite.size}
+                    coordinates={{
+                        top: screenSize.height - catSize.height,
+                        left: (screenSize.width) / 2 - (catSize.width / 2)
+                    }}
+                    size={catSize}
                 />
+                {LEFT.map(obj => <Half obj={obj} key={obj.object_id} leftOffset={0} />)}
+                {RIGHT.map(obj => <Half obj={obj} key={obj.object_id} leftOffset={screenSize.width / 2} />)}
             </View>
         );
     }
