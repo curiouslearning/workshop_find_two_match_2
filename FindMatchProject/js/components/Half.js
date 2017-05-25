@@ -30,6 +30,16 @@ class Half extends Component {
                 top: this.originalTop,
                 left: this.originalLeft
             });
+            let overlap = this.props.getOverlappingID();
+            if (overlap) {
+                if (this.props.obj.pair_id.includes(overlap)) {
+                    // match!
+                    console.log("match");
+                } else {
+                    // wrong!
+                    console.log("wrong");
+                }
+            }
             this.props.doneBeingDragged();
         }
         this.panResponder = PanResponder.create({
@@ -95,7 +105,8 @@ class Half extends Component {
     }
 
     render() {
-        let otherHalf = this.props.possibleOverlap();
+        this.possibleOverlap = this.props.possibleOverlap();
+        let otherHalf = this.possibleOverlap.next().value;
         if (otherHalf) {
             // there is a Half from the other side being dragged, check the
             // distance between it and this Half
@@ -107,6 +118,10 @@ class Half extends Component {
             if (distance < SIZE) {
                 var isOverlapped = true;
             }
+            this.possibleOverlap.next({
+                isOverlap: isOverlapped,
+                object_id: this.props.obj.object_id
+            });
         }
         let styles = this.makeStyles(isOverlapped);
         return (

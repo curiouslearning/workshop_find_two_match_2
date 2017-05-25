@@ -24,7 +24,8 @@ class Game extends Component {
             "rightBeingDragged",
             "doneBeingDragged",
             "possibleOverlapOnLeftSide",
-            "possibleOverlapOnRightSide"
+            "possibleOverlapOnRightSide",
+            "getOverlappingID"
         ];
         for (method of methods) {
             this[method] = this[method].bind(this);
@@ -53,26 +54,64 @@ class Game extends Component {
     }
 
     doneBeingDragged() {
+        this.overlappingID = undefined;
         this.setState({
             dragged: undefined
         });
     }
 
-    // These two return the location of the Half being dragged if it is from
-    // the opposite side. This is so that a Half can determine if it is being
-    // overlapped so that it can highlight.
-    possibleOverlapOnLeftSide() {
+    /**
+     * These two are used to determine if the Half currently being dragged
+     * overlaps with any Halfs on the opposite side. This is used to highlight
+     * the Half being overlapped and to store the overlapped id so that if the
+     * dragged Half is released, it can check if there is a match or not.
+     *
+     * Usage in a Half:
+     * 1. create the generator's iterator
+     *   this.possibleOverlap = this.props.possibleOverlap();
+     * 2. Start the iterator, which returns an object representing the Half
+     * currently being dragged (if it is from the other side)
+     *   let otherHalf = this.possibleOverlap.next().value;
+     * 3. If otherHalf exists, give the generator an object telling it this
+     * Half's ID and if there was an overlap.
+     *   if (otherHalf) {
+     *       (logic to find isOverlap)
+     *       this.possibleOverlap.next({
+     *           isOverlap: isOverlap,
+     *           object_id: this.props.obj.object_id
+     *       });
+     *   }
+     */
+    *possibleOverlapOnLeftSide() {
         let dragged = this.state.dragged;
         if (dragged && dragged.right) {
-            return dragged;
+            let result = yield dragged;
+            if (result.isOverlap) {
+                this.overlappingID = result.object_id;
+            } else if (result.object_id == this.overlappingID) {
+                // no longer overlapping
+                this.overlappingID = undefined;
+            }
         }
     }
 
-    possibleOverlapOnRightSide() {
+    *possibleOverlapOnRightSide() {
         let dragged = this.state.dragged;
         if (dragged && dragged.left) {
-            return dragged;
+            let result = yield dragged;
+            if (result.isOverlap) {
+                this.overlappingID = result.object_id;
+            } else if (result.object_id == this.overlappingID) {
+                // no longer overlapping
+                this.overlappingID = undefined;
+            }
         }
+    }
+
+    // this method is called when a Half is done being dragged. This returns the
+    // object_id of the Half that this Half has been dragged over, if one exists.
+    getOverlappingID() {
+        return this.overlappingID;
     }
 
     // create the JSX for the Game
@@ -104,6 +143,7 @@ class Game extends Component {
                     beingDragged={this.leftBeingDragged}
                     doneBeingDragged={this.doneBeingDragged}
                     possibleOverlap={this.possibleOverlapOnLeftSide}
+                    getOverlappingID={this.getOverlappingID}
                 />)}
                 {RIGHT.map(obj => <Half
                     obj={obj}
@@ -112,6 +152,7 @@ class Game extends Component {
                     beingDragged={this.rightBeingDragged}
                     doneBeingDragged={this.doneBeingDragged}
                     possibleOverlap={this.possibleOverlapOnRightSide}
+                    getOverlappingID={this.getOverlappingID}
                 />)}
             </View>
         );
