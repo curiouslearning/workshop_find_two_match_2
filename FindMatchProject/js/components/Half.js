@@ -30,35 +30,46 @@ class Half extends Component {
                 top: this.originalTop,
                 left: this.originalLeft
             });
+            this.props.doneBeingDragged();
         }
         this.panResponder = PanResponder.create({
             onStartShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponder: () => true,
             onPanResponderGrant: () => {
                 this.setState({isBeingDragged: true});
+                this.props.beingDragged(this.props.obj.object_id, {top: this.state.top, left: this.state.left});
             },
             onPanResponderMove: (evt, gestureState) => {
                 let {dx, dy} = gestureState;
                 let {width, height} = Dimensions.get("window");
                 var newTop = this.originalTop + dy;
                 var newLeft = this.originalLeft + dx;
-                if (newTop < (height - SIZE) && newTop >= 0) {
-                    this.setState({
-                        top: newTop
-                    });
+                if (!(newTop < (height - SIZE) && newTop >= 0)) {
+                    // newTop is outside of screen, so don't change current top
+                    newTop = this.state.top;
                 }
-                if (newLeft < (width - SIZE) && newLeft >= 0) {
-                    this.setState({
-                        left: newLeft
-                    });
+                if (!(newLeft < (width - SIZE) && newLeft >= 0)) {
+                    // newLeft is outside of screen, so don't change current left
+                    newLeft = this.state.left;
                 }
+                this.setState({
+                    left: newLeft,
+                    top: newTop
+                });
+                this.props.beingDragged(this.props.obj.object_id, {top: newTop, left: newLeft});
             },
             onPanResponderRelease: onPanResponderEnd,
             onPanResponderTerminate: onPanResponderEnd
         });
     }
 
-    makeStyles() {
+    makeStyles(isOverlapped) {
+        let opacity = 0.30;
+        if (isOverlapped) {
+            opacity = 1.00;
+        } else if (this.state.isBeingDragged) {
+            opacity = 0.70;
+        }
         return StyleSheet.create({
             container: {
                 position: "absolute",
@@ -73,7 +84,7 @@ class Half extends Component {
                 height: SIZE,
                 backgroundColor: "white",
                 borderRadius: SIZE / 2,
-                opacity: (this.state.isBeingDragged ? 0.70 : 0.30)
+                opacity: opacity
             },
             obj: {
                 position: "absolute",
@@ -84,7 +95,20 @@ class Half extends Component {
     }
 
     render() {
-        let styles = this.makeStyles();
+        let otherHalf = this.props.possibleOverlap();
+        if (otherHalf) {
+            // there is a Half from the other side being dragged, check the
+            // distance between it and this Half
+            let l1 = this.state.left,
+                t1 = this.state.top,
+                l2 = otherHalf.location.left,
+                t2 = otherHalf.location.top;
+            let distance = Math.sqrt((l2 - l1)*(l2 - l1) + (t2 - t1)*(t2 - t1));
+            if (distance < SIZE) {
+                var isOverlapped = true;
+            }
+        }
+        let styles = this.makeStyles(isOverlapped);
         return (
             <View style={styles.container} {...this.panResponder.panHandlers}>
                 <View style={styles.background} />
