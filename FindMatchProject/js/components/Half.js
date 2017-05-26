@@ -32,7 +32,7 @@ class Half extends Component {
                     this.setState({
                         isBeingDragged: false
                     });
-                    this.props.right();
+                    this.props.right({left: this.state.left, top: this.state.top});
                 } else {
                     // wrong!
                     this.props.wrong();

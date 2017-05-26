@@ -6,6 +6,7 @@ import React, {Component} from "react";
 import {
     Dimensions,
     View,
+    Text,
     StyleSheet
 } from "react-native";
 import ReactMixin from "react-mixin";
@@ -16,6 +17,8 @@ import catSprite from "../sprites/cat/catSprite";
 import Half from "./Half";
 
 const OneSecond = 1000;
+const CLOUD = "\u2601";
+const STAR = "\u2605";
 
 class Game extends Component {
     constructor() {
@@ -25,6 +28,8 @@ class Game extends Component {
             currentOpacities: {}
         };
         this.isSolved = {};
+        this.clouds = [];
+        this.stars = [];
         var methods = [
             "leftBeingDragged",
             "rightBeingDragged",
@@ -125,19 +130,31 @@ class Game extends Component {
 
     // Following two methods are used when a Half has been released to indicate
     // for the user whether their answer was right or wrong
-    right() {
+    right(position) {
         console.log("right!");
         var draggedHalf = this.state.dragged.id;
         var overlappedHalf = this.overlappingID;
         let frames = 20;
         let time = (OneSecond / 3) / frames;
         let change = 1 / frames;
+        let isLeft = (position.left < Dimensions.get("window").width / 2);
+        let reward = {...position, opacity: 0};
+        if (isLeft) {
+            this.clouds.push(reward);
+        } else {
+            this.stars.push(reward);
+        }
         for (let i = 0; i < frames; i++) {
             this.setTimeout(() => {
                 if (i == frames - 1) {
                     // last frame, they are fully faded, mark them as solved
                     this.isSolved[draggedHalf] = true;
                     this.isSolved[overlappedHalf] = true;
+                }
+                if (isLeft) {
+                    this.clouds[this.clouds.length - 1].opacity = change * i;
+                } else {
+                    this.stars[this.stars.length - 1].opacity = change * i;
                 }
                 this.setState({
                     currentOpacities: {
@@ -203,6 +220,9 @@ class Game extends Component {
                     wrong={this.wrong}
                     currentOpacity={this.currentOpacity(obj.object_id)}
                 />)}
+                {this.clouds.map((cloud, i) => <Text key={i} style={[styles.reward, {...cloud}]}>
+                    {CLOUD}
+                </Text>)}
                 {RIGHT.map(obj => <Half
                     obj={obj}
                     key={obj.object_id}
@@ -215,6 +235,9 @@ class Game extends Component {
                     wrong={this.wrong}
                     currentOpacity={this.currentOpacity(obj.object_id)}
                 />)}
+                {this.stars.map((star, i) => <Text key={i} style={[styles.reward, {...star}]}>
+                    {STAR}
+                </Text>)}
             </View>
         );
     }
@@ -234,6 +257,11 @@ const styles = StyleSheet.create({
     rightView: {
         backgroundColor: "#00008B",
         flex: 1
+    },
+    reward: {
+        fontSize: 50,
+        color: "white",
+        position: "absolute"
     }
 });
 
