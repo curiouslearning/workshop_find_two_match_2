@@ -42,6 +42,12 @@ class Half extends Component {
                         left: this.originalLeft
                     });
                 }
+            } else {
+                this.setState({
+                    isBeingDragged: false,
+                    top: this.originalTop,
+                    left: this.originalLeft
+                });
             }
             this.props.doneBeingDragged();
         }
@@ -79,10 +85,12 @@ class Half extends Component {
     makeStyles(isOverlapped) {
         let backgroundOpacity = 0.30 * this.props.currentOpacity;
         let objOpacity = this.props.currentOpacity;
-        if (isOverlapped) {
-            backgroundOpacity = 1.00;
-        } else if (this.state.isBeingDragged) {
-            backgroundOpacity = 0.70;
+        if (this.props.currentOpacity == 1) {
+            if (isOverlapped) {
+                backgroundOpacity = 1.00;
+            } else if (this.state.isBeingDragged) {
+                backgroundOpacity = 0.70;
+            }
         }
         return StyleSheet.create({
             container: {
