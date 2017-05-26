@@ -8,6 +8,8 @@ import {
     View,
     StyleSheet
 } from "react-native";
+import ReactMixin from "react-mixin";
+import ReactTimerMixin from "react-timer-mixin";
 
 import AnimatedSprite from "react-native-animated-sprite";
 import catSprite from "../sprites/cat/catSprite";
@@ -25,7 +27,9 @@ class Game extends Component {
             "doneBeingDragged",
             "possibleOverlapOnLeftSide",
             "possibleOverlapOnRightSide",
-            "getOverlappingID"
+            "getOverlappingID",
+            "right",
+            "wrong"
         ];
         for (method of methods) {
             this[method] = this[method].bind(this);
@@ -114,6 +118,25 @@ class Game extends Component {
         return this.overlappingID;
     }
 
+    // Following two methods are used when a Half has been released to indicate
+    // for the user whether their answer was right or wrong
+    right() {
+        console.log("right!");
+    }
+
+    wrong() {
+        console.log("wrong!");
+        this.setState({
+            catAnimationType: "ANGRY"
+        });
+        let oneSecond = 1000;
+        this.setTimeout(() => {
+            this.setState({
+                catAnimationType: "NORMAL"
+            });
+        }, oneSecond);
+    }
+
     // create the JSX for the Game
     render() {
         const CONTENT = this.props.navigation.state.params.content;
@@ -144,6 +167,8 @@ class Game extends Component {
                     doneBeingDragged={this.doneBeingDragged}
                     possibleOverlap={this.possibleOverlapOnLeftSide}
                     getOverlappingID={this.getOverlappingID}
+                    right={this.right}
+                    wrong={this.wrong}
                 />)}
                 {RIGHT.map(obj => <Half
                     obj={obj}
@@ -153,11 +178,15 @@ class Game extends Component {
                     doneBeingDragged={this.doneBeingDragged}
                     possibleOverlap={this.possibleOverlapOnRightSide}
                     getOverlappingID={this.getOverlappingID}
+                    right={this.right}
+                    wrong={this.wrong}
                 />)}
             </View>
         );
     }
 }
+
+ReactMixin(Game.prototype, ReactTimerMixin);
 
 const styles = StyleSheet.create({
     containerView: {

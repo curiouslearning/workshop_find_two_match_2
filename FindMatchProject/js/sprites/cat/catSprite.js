@@ -12,7 +12,7 @@ const catSprite = {
             case "NORMAL":
                 return [0];
             case "ANGRY":
-                return [0, 1, 1, 1, 1, 1, 1, 1, 0];
+                return [1];
         }
     }
 };

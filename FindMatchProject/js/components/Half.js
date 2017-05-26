@@ -25,19 +25,19 @@ class Half extends Component {
         this.originalLeft = this.props.leftOffset + this.props.obj.pos[0];
         this.originalTop = this.props.obj.pos[1];
         let onPanResponderEnd = () => {
-            this.setState({
-                isBeingDragged: false,
-                top: this.originalTop,
-                left: this.originalLeft
-            });
             let overlap = this.props.getOverlappingID();
             if (overlap) {
                 if (this.props.obj.pair_id.includes(overlap)) {
                     // match!
-                    console.log("match");
+                    this.props.right();
                 } else {
                     // wrong!
-                    console.log("wrong");
+                    this.props.wrong();
+                    this.setState({
+                        isBeingDragged: false,
+                        top: this.originalTop,
+                        left: this.originalLeft
+                    });
                 }
             }
             this.props.doneBeingDragged();
