@@ -15,12 +15,16 @@ import AnimatedSprite from "react-native-animated-sprite";
 import catSprite from "../sprites/cat/catSprite";
 import Half from "./Half";
 
+const OneSecond = 1000;
+
 class Game extends Component {
     constructor() {
         super();
         this.state = {
-            catAnimationType: "NORMAL"
+            catAnimationType: "NORMAL",
+            currentOpacities: {}
         };
+        this.isSolved = {};
         var methods = [
             "leftBeingDragged",
             "rightBeingDragged",
@@ -29,7 +33,8 @@ class Game extends Component {
             "possibleOverlapOnRightSide",
             "getOverlappingID",
             "right",
-            "wrong"
+            "wrong",
+            "currentOpacity"
         ];
         for (method of methods) {
             this[method] = this[method].bind(this);
@@ -122,6 +127,26 @@ class Game extends Component {
     // for the user whether their answer was right or wrong
     right() {
         console.log("right!");
+        var draggedHalf = this.state.dragged.id;
+        var overlappedHalf = this.overlappingID;
+        let frames = 20;
+        let time = (OneSecond / 3) / frames;
+        let change = 1 / frames;
+        for (let i = 0; i < frames; i++) {
+            this.setTimeout(() => {
+                if (i == frames - 1) {
+                    // last frame, they are fully faded, mark them as solved
+                    this.isSolved[draggedHalf] = true;
+                    this.isSolved[overlappedHalf] = true;
+                }
+                this.setState({
+                    currentOpacities: {
+                        [draggedHalf]: 1 - change * i,
+                        [overlappedHalf]: 1 - change * i
+                    }
+                });
+            }, time * i);
+        }
     }
 
     wrong() {
@@ -129,12 +154,19 @@ class Game extends Component {
         this.setState({
             catAnimationType: "ANGRY"
         });
-        let oneSecond = 1000;
         this.setTimeout(() => {
             this.setState({
                 catAnimationType: "NORMAL"
             });
-        }, oneSecond);
+        }, OneSecond);
+    }
+
+    currentOpacity(object_id) {
+        if (this.isSolved[object_id]) {
+            return 0;
+        }
+        let opacity = this.state.currentOpacities[object_id];
+        return (opacity ? opacity : 1);
     }
 
     // create the JSX for the Game
@@ -169,6 +201,7 @@ class Game extends Component {
                     getOverlappingID={this.getOverlappingID}
                     right={this.right}
                     wrong={this.wrong}
+                    currentOpacity={this.currentOpacity(obj.object_id)}
                 />)}
                 {RIGHT.map(obj => <Half
                     obj={obj}
@@ -180,6 +213,7 @@ class Game extends Component {
                     getOverlappingID={this.getOverlappingID}
                     right={this.right}
                     wrong={this.wrong}
+                    currentOpacity={this.currentOpacity(obj.object_id)}
                 />)}
             </View>
         );

@@ -29,6 +29,9 @@ class Half extends Component {
             if (overlap) {
                 if (this.props.obj.pair_id.includes(overlap)) {
                     // match!
+                    this.setState({
+                        isBeingDragged: false
+                    });
                     this.props.right();
                 } else {
                     // wrong!
@@ -74,11 +77,12 @@ class Half extends Component {
     }
 
     makeStyles(isOverlapped) {
-        let opacity = 0.30;
+        let backgroundOpacity = 0.30 * this.props.currentOpacity;
+        let objOpacity = this.props.currentOpacity;
         if (isOverlapped) {
-            opacity = 1.00;
+            backgroundOpacity = 1.00;
         } else if (this.state.isBeingDragged) {
-            opacity = 0.70;
+            backgroundOpacity = 0.70;
         }
         return StyleSheet.create({
             container: {
@@ -94,12 +98,13 @@ class Half extends Component {
                 height: SIZE,
                 backgroundColor: "white",
                 borderRadius: SIZE / 2,
-                opacity: opacity
+                opacity: backgroundOpacity
             },
             obj: {
                 position: "absolute",
                 color: "black",
-                fontSize: SIZE
+                fontSize: SIZE,
+                opacity: objOpacity
             }
         });
     }
