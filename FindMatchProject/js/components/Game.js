@@ -19,6 +19,7 @@ import Half from "./Half";
 const OneSecond = 1000;
 const CLOUD = "\u2601";
 const STAR = "\u2605";
+const WinText = "¡Tú ganas!";
 
 class Game extends Component {
     constructor() {
@@ -150,6 +151,12 @@ class Game extends Component {
                     // last frame, they are fully faded, mark them as solved
                     this.isSolved[draggedHalf] = true;
                     this.isSolved[overlappedHalf] = true;
+                    // check if the user has won
+                    let numPairs = this.props.navigation.state.params.content.left.length;
+                    let matchedPairs = this.clouds.length + this.stars.length;
+                    if (numPairs == matchedPairs) {
+                        this.setState({won: true});
+                    }
                 }
                 if (isLeft) {
                     this.clouds[this.clouds.length - 1].opacity = change * i;
@@ -238,6 +245,7 @@ class Game extends Component {
                 {this.stars.map((star, i) => <Text key={i} style={[styles.reward, {...star}]}>
                     {STAR}
                 </Text>)}
+                {(this.state.won ? <Text style={styles.winText}>{WinText}</Text> : null)}
             </View>
         );
     }
@@ -262,6 +270,18 @@ const styles = StyleSheet.create({
         fontSize: 50,
         color: "white",
         position: "absolute"
+    },
+    winText: {
+        position: "absolute",
+        backgroundColor: "#e67e35",
+        height: 200,
+        width: "100%",
+        color: "#FFF",
+        fontSize: 50,
+        textAlign: "center",
+        fontWeight: "bold",
+        textAlignVertical: "center",
+        marginTop: 20
     }
 });
 
