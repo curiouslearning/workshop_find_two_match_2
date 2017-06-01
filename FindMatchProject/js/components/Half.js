@@ -12,17 +12,18 @@ import {
     StyleSheet
 } from "react-native";
 
-const SIZE = 40;
+//const SIZE = 40;
 
 class Half extends Component {
     constructor(props) {
         super(props);
         this.state = {
             top: props.obj.pos[1],
-            left: this.props.leftOffset + props.obj.pos[0],
+            left: props.obj.pos[0],
             isBeingDragged: false
         };
-        this.originalLeft = this.props.leftOffset + this.props.obj.pos[0];
+        this.size = Dimensions.get("window").height * this.props.fractionOfHeight / 2;
+        this.originalLeft = this.props.obj.pos[0];
         this.originalTop = this.props.obj.pos[1];
         let onPanResponderEnd = () => {
             let overlap = this.props.getOverlappingID();
@@ -63,11 +64,11 @@ class Half extends Component {
                 let {width, height} = Dimensions.get("window");
                 var newTop = this.originalTop + dy;
                 var newLeft = this.originalLeft + dx;
-                if (!(newTop < (height - SIZE) && newTop >= 0)) {
+                if (!(newTop < (height - this.size) && newTop >= 0)) {
                     // newTop is outside of screen, so don't change current top
                     newTop = this.state.top;
                 }
-                if (!(newLeft < (width - SIZE) && newLeft >= 0)) {
+                if (!(newLeft < (width - this.size) && newLeft >= 0)) {
                     // newLeft is outside of screen, so don't change current left
                     newLeft = this.state.left;
                 }
@@ -102,16 +103,16 @@ class Half extends Component {
                 position: "absolute",
                 top: 10,
                 left: -10,
-                width: SIZE,
-                height: SIZE,
+                width: this.size,
+                height: this.size,
                 backgroundColor: "white",
-                borderRadius: SIZE / 2,
+                borderRadius: this.size / 2,
                 opacity: backgroundOpacity
             },
             obj: {
                 position: "absolute",
                 color: "black",
-                fontSize: SIZE,
+                fontSize: this.size,
                 opacity: objOpacity
             }
         });
@@ -128,7 +129,7 @@ class Half extends Component {
                 l2 = otherHalf.location.left,
                 t2 = otherHalf.location.top;
             let distance = Math.sqrt((l2 - l1)*(l2 - l1) + (t2 - t1)*(t2 - t1));
-            if (distance < SIZE) {
+            if (distance < this.size) {
                 var isOverlapped = true;
             }
             this.possibleOverlap.next({

@@ -1,0 +1,133 @@
+[{
+	"trial_num": "001",
+	"left": [{
+		"object_id": "A_uppercase",
+		"pos": ["0", "0"],
+		"target": "A",
+		"pair_id": ["A_lowercase"]
+	}, {
+		"object_id": "X_uppercase",
+		"pos": ["0", "1"],
+		"target": "X",
+		"pair_id": ["X_lowercase"]
+	}, {
+		"object_id": "J_uppercase",
+		"pos": ["1", "0"],
+		"target": "J",
+		"pair_id": ["J_lowercase"]
+	}, {
+		"object_id": "H_uppercase",
+		"pos": ["1", "1"],
+		"target": "H",
+		"pair_id": ["H_lowercase"]
+	}],
+	"right": [{
+		"object_id": "H_lowercase",
+		"pos": ["0", "0"],
+		"target": "h",
+		"pair_id": ["H_uppercase"]
+	}, {
+		"object_id": "A_lowercase",
+		"pos": ["0", "1"],
+		"target": "a",
+		"pair_id": ["A_uppercase"]
+	}, {
+		"object_id": "X_lowercase",
+		"pos": ["1", "0"],
+		"target": "x",
+		"pair_id": ["X_uppercase"]
+	}, {
+		"object_id": "J_lowercase",
+		"pos": ["1", "1"],
+		"target": "j",
+		"pair_id": ["J_uppercase"]
+	}]
+}, {
+	"trial_num": "002",
+	"left": [{
+		"object_id": "Cat_Image",
+		"pos": ["0", "0"],
+		"target": "cat.png",
+		"pair_id": ["Cat_Word"]
+	}, {
+		"object_id": "Bat_Image",
+		"pos": ["0", "1"],
+		"target": "bat.png",
+		"pair_id": ["Bat_Word"]
+	}, {
+		"object_id": "Map_Image",
+		"pos": ["1", "0"],
+		"target": "map.png",
+		"pair_id": ["Map_Word"]
+	}, {
+		"object_id": "Bag_Image",
+		"pos": ["1", "1"],
+		"target": "bag.png",
+		"pair_id": ["Bag_Word"]
+	}],
+	"right": [{
+		"object_id": "Bag_Word",
+		"pos": ["0", "0"],
+		"target": "bag",
+		"pair_id": ["Bag_Image"]
+	}, {
+		"object_id": "Cat_Word",
+		"pos": ["0", "1"],
+		"target": "cat",
+		"pair_id": ["Cat_Image"]
+	}, {
+		"object_id": "Bat_Image",
+		"pos": ["1", "0"],
+		"target": "bat",
+		"pair_id": ["Bat_Word"]
+	}, {
+		"object_id": "Map_Word",
+		"pos": ["1", "1"],
+		"target": "map",
+		"pair_id": ["Map_Image"]
+	}]
+}, {
+	"trial_num": "003",
+	"left": [{
+		"object_id": "Cat_Image",
+		"pos": ["0", "0"],
+		"target": "cat.png",
+		"pair_id": ["Cat_Image"]
+	}, {
+		"object_id": "Bat_Image",
+		"pos": ["0", "1"],
+		"target": "bat.png",
+		"pair_id": ["Bat_Image"]
+	}, {
+		"object_id": "Map_Image",
+		"pos": ["1", "0"],
+		"target": "map.png",
+		"pair_id": ["Map_Image"]
+	}, {
+		"object_id": "Bag_Image",
+		"pos": ["1", "1"],
+		"target": "bag.png",
+		"pair_id": ["Bag_Image"]
+	}],
+	"right": [{
+		"object_id": "Bag_Image",
+		"pos": ["1", "0"],
+		"target": "bag",
+		"pair_id": ["Bag_Image"]
+	}, {
+		"object_id": "Cat_Image",
+		"pos": ["1", "1"],
+		"target": "cat",
+		"pair_id": ["Cat_Image"]
+	}, {
+		"object_id": "Bat_Image",
+		"pos": ["0", "1"],
+		"target": "bat",
+		"pair_id": ["Bat_Word"]
+	}, {
+		"object_id": "Map_Image",
+		"pos": ["0", "0"],
+		"target": "map",
+		"pair_id": ["Map_Image"]
+	}]
+}]

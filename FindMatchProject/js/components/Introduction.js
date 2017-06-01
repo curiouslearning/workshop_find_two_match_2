@@ -13,51 +13,10 @@ import {
 
 import AnimatedSprite from "react-native-animated-sprite";
 import catSprite from "../sprites/cat/catSprite";
+import GameMaker from "../utils/GameMaker";
 
 const RightArrow = "\u27aa";
-const CONTENT = {
-    trial_num: 0,
-    left: [
-        {
-            object_id: 1,
-            target: "a",
-            pos: [20, 100],
-            pair_id: [4]
-        },
-        {
-            object_id: 2,
-            target: "e",
-            pos: [80, 200],
-            pair_id: [5]
-        },
-        {
-            object_id: 3,
-            target: "u",
-            pos: [170, 50],
-            pair_id: [6]
-        }
-    ],
-    right: [
-        {
-            object_id: 4,
-            target: "a",
-            pos: [250, 200],
-            pair_id: [1]
-        },
-        {
-            object_id: 5,
-            target: "e",
-            pos: [100, 100],
-            pair_id: [2]
-        },
-        {
-            object_id: 6,
-            target: "u",
-            pos: [50, 50],
-            pair_id: [3]
-        }
-    ]
-}
+const FractionOfHeight = 0.6;
 
 class Introduction extends Component {
     constructor() {
@@ -67,6 +26,7 @@ class Introduction extends Component {
             text: "¡Hola, aprendamos español!",
             buttonText: `¡Juguemos! ${RightArrow}`
         };
+        this.GameMaker = new GameMaker(FractionOfHeight);
     }
 
     // toggles whether the cat is angry
@@ -80,6 +40,7 @@ class Introduction extends Component {
         const catY = screenSize.height - catSprite.size.height;
         const catXMin = 50;
         const catXMax = screenSize.width - catSprite.size.width - 50;
+        const currentLevel = 1;
         return (
             <View>
                 <Text style={styles.welcome}>
@@ -87,7 +48,7 @@ class Introduction extends Component {
                 </Text>
                 <TouchableOpacity
                     style={styles.gameButton}
-                    onPress={() => navigate("Game", {content: CONTENT})}
+                    onPress={() => navigate("Game", {content: this.GameMaker.getLevelContent(currentLevel), fractionOfHeight: FractionOfHeight})}
                 >
                     <Text style={styles.gameButtonText}>{this.state.buttonText}</Text>
                 </TouchableOpacity>

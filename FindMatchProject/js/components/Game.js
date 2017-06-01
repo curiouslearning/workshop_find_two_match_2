@@ -196,6 +196,7 @@ class Game extends Component {
     // create the JSX for the Game
     render() {
         const CONTENT = this.props.navigation.state.params.content;
+        const FractionOfHeight = this.props.navigation.state.params.fractionOfHeight;
         const LEFT = CONTENT.left;
         const RIGHT = CONTENT.right;
         var screenSize = Dimensions.get("window");
@@ -218,7 +219,7 @@ class Game extends Component {
                 {LEFT.map(obj => <Half
                     obj={obj}
                     key={obj.object_id}
-                    leftOffset={0}
+                    fractionOfHeight={FractionOfHeight}
                     beingDragged={this.leftBeingDragged}
                     doneBeingDragged={this.doneBeingDragged}
                     possibleOverlap={this.possibleOverlapOnLeftSide}
@@ -233,7 +234,7 @@ class Game extends Component {
                 {RIGHT.map(obj => <Half
                     obj={obj}
                     key={obj.object_id}
-                    leftOffset={screenSize.width / 2}
+                    fractionOfHeight={FractionOfHeight}
                     beingDragged={this.rightBeingDragged}
                     doneBeingDragged={this.doneBeingDragged}
                     possibleOverlap={this.possibleOverlapOnRightSide}
