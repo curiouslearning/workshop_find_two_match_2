@@ -29,6 +29,19 @@ class Game extends Component {
             catAnimationType: "NORMAL",
             currentOpacities: {}
         };
+        this.sounds = {};
+        this.sounds.wrong = new Sound("wrong.wav", Sound.MAIN_BUNDLE, (e) => {
+            if (e) {
+              console.log("error", e);
+            }
+        });
+        ["a", "h", "j", "x"].forEach((letter) => {
+            this.sounds[letter] = new Sound(`${letter}_sound.wav`, Sound.MAIN_BUNDLE, (e) => {
+                if (e) {
+                    console.log("error", e);
+                }
+            });
+        });
         this.isSolved = {};
         this.clouds = [];
         this.stars = [];
@@ -49,21 +62,23 @@ class Game extends Component {
     }
 
     // Following methods will be used by the Halfs
-    leftBeingDragged(object_id, location) {
+    leftBeingDragged(object_id, target, location) {
         this.setState({
             dragged: {
                 left: true,
                 id: object_id,
+                target: target.toLowerCase(),
                 location: location
             }
         });
     }
 
-    rightBeingDragged(object_id, location) {
+    rightBeingDragged(object_id, target, location) {
         this.setState({
             dragged: {
                 right: true,
                 id: object_id,
+                target: target.toLowerCase(),
                 location: location
             }
         });
@@ -136,6 +151,7 @@ class Game extends Component {
         console.log("right!");
         var draggedHalf = this.state.dragged.id;
         var overlappedHalf = this.overlappingID;
+        this.sounds[this.state.dragged.target].play();
         let frames = 20;
         let time = (OneSecond / 3) / frames;
         let change = 1 / frames;
@@ -176,13 +192,7 @@ class Game extends Component {
 
     wrong() {
         console.log("wrong!");
-        const sound = new Sound("wrong.wav", Sound.MAIN_BUNDLE, (e) => {
-            if (e) {
-              console.log('error', e);
-            } else {
-              sound.play(() => sound.release()); // Release when it's done so we're not using up resources
-            }
-        });
+        this.sounds.wrong.play();
         this.setState({
             catAnimationType: "ANGRY"
         });

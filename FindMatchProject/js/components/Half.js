@@ -55,7 +55,11 @@ class Half extends Component {
             onMoveShouldSetPanResponder: () => true,
             onPanResponderGrant: () => {
                 this.setState({isBeingDragged: true});
-                this.props.beingDragged(this.props.obj.object_id, {top: this.state.top, left: this.state.left});
+                this.props.beingDragged(
+                    this.props.obj.object_id,
+                    this.props.obj.target,
+                    {top: this.state.top, left: this.state.left}
+                );
             },
             onPanResponderMove: (evt, gestureState) => {
                 let {dx, dy} = gestureState;
@@ -74,7 +78,11 @@ class Half extends Component {
                     left: newLeft,
                     top: newTop
                 });
-                this.props.beingDragged(this.props.obj.object_id, {top: newTop, left: newLeft});
+                this.props.beingDragged(
+                    this.props.obj.object_id,
+                    this.props.obj.target,
+                    {top: newTop, left: newLeft}
+                );
             },
             onPanResponderRelease: onPanResponderEnd,
             onPanResponderTerminate: onPanResponderEnd
