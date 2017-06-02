@@ -12,8 +12,6 @@ import {
     StyleSheet
 } from "react-native";
 
-//const SIZE = 40;
-
 class Half extends Component {
     constructor(props) {
         super(props);

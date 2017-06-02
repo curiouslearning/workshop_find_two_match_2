@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import ReactMixin from "react-mixin";
 import ReactTimerMixin from "react-timer-mixin";
+import Sound from "react-native-sound";
 
 import AnimatedSprite from "react-native-animated-sprite";
 import catSprite from "../sprites/cat/catSprite";
@@ -175,6 +176,13 @@ class Game extends Component {
 
     wrong() {
         console.log("wrong!");
+        const sound = new Sound("wrong.wav", Sound.MAIN_BUNDLE, (e) => {
+            if (e) {
+              console.log('error', e);
+            } else {
+              sound.play(() => sound.release()); // Release when it's done so we're not using up resources
+            }
+        });
         this.setState({
             catAnimationType: "ANGRY"
         });
