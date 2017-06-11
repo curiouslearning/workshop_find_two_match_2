@@ -39,10 +39,10 @@ class GameMaker {
         let top = obj.pos[1];
         // left and top are expected to be 0 or 1. Obj will take up half of
         // vertical space and quarter of horizontal space.
-        left = left * (this.screenSize.width / 4);
+        left = left * (this.screenSize.width / 4) + (this.screenSize.width / 8);
         // if on the right side, offset left by half the width
         if (rightSide) left += this.screenSize.width / 2;
-        top = top * (this.screenSize.height * this.fractionOfHeight / 2)
+        top = top * (this.screenSize.height * this.fractionOfHeight / 2) + (this.screenSize.height * this.fractionOfHeight / 8);
         obj.pos = [left, top];
         return obj;
     }

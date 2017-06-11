@@ -20,7 +20,7 @@ class Half extends Component {
             left: props.obj.pos[0],
             isBeingDragged: false
         };
-        this.size = Dimensions.get("window").height * this.props.fractionOfHeight / 2;
+        this.size = Dimensions.get("window").height * this.props.fractionOfHeight / 4;
         this.originalLeft = this.props.obj.pos[0];
         this.originalTop = this.props.obj.pos[1];
         let onPanResponderEnd = () => {
