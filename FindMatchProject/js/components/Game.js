@@ -56,7 +56,8 @@ class Game extends Component {
             "getOverlappingID",
             "right",
             "wrong",
-            "currentOpacity"
+            "currentOpacity",
+            "getCat"
         ];
         for (method of methods) {
             this[method] = this[method].bind(this);
@@ -213,29 +214,35 @@ class Game extends Component {
         return (opacity ? opacity : 1);
     }
 
+    getCat() {
+        if (this.props.navigation && this.props.navigation.state.params.cat) {
+            let screenSize = Dimensions.get("window");
+            let catSize = catSprite.size;
+            return (<AnimatedSprite
+                ref="cat"
+                sprite={catSprite}
+                animationFrameIndex={catSprite.animationIndex(this.state.catAnimationType)}
+                loopAnimation={true}
+                coordinates={{
+                    top: screenSize.height - catSize.height,
+                    left: (screenSize.width) / 2 - (catSize.width / 2)
+                }}
+                size={catSize}
+            />);
+        }
+    }
+
     // create the JSX for the Game
     render() {
         const CONTENT = this.props.navigation ? this.props.navigation.state.params.content : this.props.content;
         const FractionOfHeight = this.props.navigation ? this.props.navigation.state.params.fractionOfHeight : this.props.fractionOfHeight;
         const LEFT = CONTENT.left;
         const RIGHT = CONTENT.right;
-        var screenSize = Dimensions.get("window");
-        var catSize = catSprite.size;
         return (
             <View style={[styles.containerView, {flex: FractionOfHeight}]}>
                 <View style={styles.leftView} />
                 <View style={styles.rightView} />
-                <AnimatedSprite
-                    ref="cat"
-                    sprite={catSprite}
-                    animationFrameIndex={catSprite.animationIndex(this.state.catAnimationType)}
-                    loopAnimation={true}
-                    coordinates={{
-                        top: screenSize.height - catSize.height,
-                        left: (screenSize.width) / 2 - (catSize.width / 2)
-                    }}
-                    size={catSize}
-                />
+                {this.getCat()}
                 {LEFT.map(obj => <Half
                     obj={obj}
                     key={obj.object_id}

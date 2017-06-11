@@ -18,7 +18,7 @@ import Game from "./Game"
 
 const RightArrow = "\u27aa";
 const FractionOfHeight = 0.6;
-const TrainerHeightFraction = 0.5;
+const TrainerHeightFraction = 0.7;
 
 class Introduction extends Component {
     constructor() {
@@ -68,7 +68,7 @@ class Introduction extends Component {
                 <Game content={this.trainerContent} fractionOfHeight={TrainerHeightFraction} />
                 <TouchableOpacity
                     style={styles.gameButton}
-                    onPress={() => navigate("Game", {content: this.GameMaker.getLevelContent(currentLevel), fractionOfHeight: FractionOfHeight})}
+                    onPress={() => navigate("Game", {content: this.GameMaker.getLevelContent(currentLevel), fractionOfHeight: FractionOfHeight, cat: true})}
                 >
                     <Text style={styles.gameButtonText}>{this.state.buttonText}</Text>
                 </TouchableOpacity>
