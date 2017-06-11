@@ -23,8 +23,8 @@ const STAR = "\u2605";
 const WinText = "¡Tú ganas!";
 
 class Game extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             catAnimationType: "NORMAL",
             currentOpacities: {}
@@ -35,8 +35,10 @@ class Game extends Component {
               console.log("error", e);
             }
         });
-        ["a", "h", "j", "x"].forEach((letter) => {
-            this.sounds[letter] = new Sound(`${letter}_sound.wav`, Sound.MAIN_BUNDLE, (e) => {
+        let left = props.navigation ? props.navigation.state.params.content.left : this.props.content.left;
+        left.forEach((half) => {
+            let lowered = half.target.toLowerCase();
+            this.sounds[lowered] = new Sound(`${lowered}_sound.wav`, Sound.MAIN_BUNDLE, (e) => {
                 if (e) {
                     console.log("error", e);
                 }
@@ -169,7 +171,7 @@ class Game extends Component {
                     this.isSolved[draggedHalf] = true;
                     this.isSolved[overlappedHalf] = true;
                     // check if the user has won
-                    let numPairs = this.props.navigation.state.params.content.left.length;
+                    let numPairs = this.props.navigation ? this.props.navigation.state.params.content.left.length : this.props.content.left.length;
                     let matchedPairs = this.clouds.length + this.stars.length;
                     if (numPairs == matchedPairs) {
                         this.setState({won: true});
@@ -213,14 +215,14 @@ class Game extends Component {
 
     // create the JSX for the Game
     render() {
-        const CONTENT = this.props.navigation.state.params.content;
-        const FractionOfHeight = this.props.navigation.state.params.fractionOfHeight;
+        const CONTENT = this.props.navigation ? this.props.navigation.state.params.content : this.props.content;
+        const FractionOfHeight = this.props.navigation ? this.props.navigation.state.params.fractionOfHeight : this.props.fractionOfHeight;
         const LEFT = CONTENT.left;
         const RIGHT = CONTENT.right;
         var screenSize = Dimensions.get("window");
         var catSize = catSprite.size;
         return (
-            <View style={styles.containerView}>
+            <View style={[styles.containerView, {flex: FractionOfHeight}]}>
                 <View style={styles.leftView} />
                 <View style={styles.rightView} />
                 <AnimatedSprite
@@ -274,7 +276,6 @@ ReactMixin(Game.prototype, ReactTimerMixin);
 
 const styles = StyleSheet.create({
     containerView: {
-        flex: 1,
         flexDirection: "row"
     },
     leftView: {

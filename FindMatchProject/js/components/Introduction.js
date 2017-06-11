@@ -14,13 +14,35 @@ import {
 import AnimatedSprite from "react-native-animated-sprite";
 import catSprite from "../sprites/cat/catSprite";
 import GameMaker from "../utils/GameMaker";
+import Game from "./Game"
 
 const RightArrow = "\u27aa";
 const FractionOfHeight = 0.6;
+const TrainerHeightFraction = 0.5;
 
 class Introduction extends Component {
     constructor() {
         super();
+        let screenSize = Dimensions.get("window");
+        let top = screenSize.height / 8;
+        let left = screenSize.width / 8;
+        let leftHalf = {
+            "object_id": "e_left",
+            "pos": [left, top],
+            "target": "e",
+            "pair_id": ["e_right"]
+        };
+        let rightHalf = {
+            "object_id": "e_right",
+            "pos": [left + screenSize.width / 2, top],
+            "target": "e",
+            "pair_id": ["e_left"]
+        };
+        this.trainerContent = {
+            trial_num: "000",
+            left: [leftHalf],
+            right: [rightHalf]
+        }
         this.state = {
             animationType: "NORMAL",
             text: "¡Hola, aprendamos español!",
@@ -42,47 +64,25 @@ class Introduction extends Component {
         const catXMax = screenSize.width - catSprite.size.width - 50;
         const currentLevel = 1;
         return (
-            <View>
-                <Text style={styles.welcome}>
-                    {this.state.text}
-                </Text>
+            <View style={styles.container}>
+                <Game content={this.trainerContent} fractionOfHeight={TrainerHeightFraction} />
                 <TouchableOpacity
                     style={styles.gameButton}
                     onPress={() => navigate("Game", {content: this.GameMaker.getLevelContent(currentLevel), fractionOfHeight: FractionOfHeight})}
                 >
                     <Text style={styles.gameButtonText}>{this.state.buttonText}</Text>
                 </TouchableOpacity>
-                <AnimatedSprite
-                    ref="catRef"
-                    sprite={catSprite}
-                    animationFrameIndex={catSprite.animationIndex(this.state.animationType)}
-                    loopAnimation={true}
-                    coordinates={{top:catY, left: catXMin}}
-                    size={catSprite.size}
-                    onPress={() => {this.onPress();}}
-                    tweenOptions ={{
-                        tweenType: "sine-wave",
-                        startXY: [catXMin, catY],
-                        xTo: [catXMin, catXMax, catXMin],
-                        yTo: [catY],
-                        duration: 1500,
-                        loop: false
-                    }}
-                    tweenStart="fromMount"
-                />
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    welcome: {
-        fontSize: 30,
-        textAlign: "left",
-        margin: 10,
+    container: {
+        flex: 1
     },
     gameButton: {
-        height: Dimensions.get("window").height - catSprite.size.height - 50,
+        flex: 1 - TrainerHeightFraction,
         backgroundColor: "#e67e35",
         justifyContent: "center"
     },
