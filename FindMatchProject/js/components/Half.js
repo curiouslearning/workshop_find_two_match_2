@@ -5,6 +5,8 @@
 
 import React, {Component} from "react";
 import {
+    Animated,
+    Easing,
     View,
     Text,
     PanResponder,
@@ -18,7 +20,8 @@ class Half extends Component {
         this.state = {
             top: props.obj.pos[1],
             left: props.obj.pos[0],
-            isBeingDragged: false
+            isBeingDragged: false,
+            scale: new Animated.Value(1.00)
         };
         this.size = Dimensions.get("window").height * this.props.fractionOfHeight / 4;
         this.originalLeft = this.props.obj.pos[0];
@@ -89,6 +92,28 @@ class Half extends Component {
         });
     }
 
+    giveHint() {
+        this.pulse = Animated.sequence([
+            Animated.timing(this.state.scale, {
+                toValue: 1.5,
+                duration: 1000,
+                easing: Easing.linear
+            }),
+            Animated.timing(this.state.scale, {
+                toValue: 1.00,
+                duration: 1000,
+                easing: Easing.linear
+            })
+        ]);
+        this.pulse.start(() => this.giveHint());
+    }
+
+    componentDidMount() {
+        if (this.shouldGiveHint) {
+            this.giveHint();
+        }
+    }
+
     makeStyles(isOverlapped) {
         let backgroundOpacity = 0.30 * this.props.currentOpacity;
         let objOpacity = this.props.currentOpacity;
@@ -109,8 +134,9 @@ class Half extends Component {
                 position: "absolute",
                 top: 10,
                 left: -10,
-                width: this.size,
-                height: this.size,
+                width: this.size * this.state.scale._value,
+                height: this.size * this.state.scale._value,
+                transform: [{scale: this.state.scale._value}],
                 backgroundColor: "white",
                 borderRadius: this.size / 2,
                 opacity: backgroundOpacity
@@ -118,7 +144,8 @@ class Half extends Component {
             obj: {
                 position: "absolute",
                 color: "black",
-                fontSize: this.size,
+                fontSize: this.size * this.state.scale._value,
+                transform: [{scale: this.state.scale._value}],
                 opacity: objOpacity
             }
         });
@@ -138,6 +165,11 @@ class Half extends Component {
             if (distance < this.size) {
                 var isOverlapped = true;
             }
+            // also check if should provie pulse
+            if (this.props.obj.pair_id.indexOf(otherHalf.id) >= 0) {
+                this.shouldGiveHint = true;
+                this.giveHint();
+            }
             this.possibleOverlap.next({
                 isOverlap: isOverlapped,
                 object_id: this.props.obj.object_id
@@ -146,10 +178,10 @@ class Half extends Component {
         let styles = this.makeStyles(isOverlapped);
         return (
             <View style={styles.container} {...this.panResponder.panHandlers}>
-                <View style={styles.background} />
-                <Text style={styles.obj}>
+                <Animated.View style={styles.background} />
+                <Animated.Text style={styles.obj}>
                     {this.props.obj.target}
-                </Text>
+                </Animated.Text>
             </View>
         );
     }
