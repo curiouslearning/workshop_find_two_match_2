@@ -65,10 +65,10 @@ class Introduction extends Component {
         const currentLevel = 1;
         return (
             <View style={styles.container}>
-                <Game content={this.trainerContent} fractionOfHeight={TrainerHeightFraction} />
+                <Game content={this.trainerContent} fractionOfHeight={TrainerHeightFraction} numWrongBeforeHint={0}/>
                 <TouchableOpacity
                     style={styles.gameButton}
-                    onPress={() => navigate("Game", {content: this.GameMaker.getLevelContent(currentLevel), fractionOfHeight: FractionOfHeight, cat: true})}
+                    onPress={() => navigate("Game", {content: this.GameMaker.getLevelContent(currentLevel), fractionOfHeight: FractionOfHeight, numWrongBeforeHint: 3})}
                 >
                     <Text style={styles.gameButtonText}>{this.state.buttonText}</Text>
                 </TouchableOpacity>

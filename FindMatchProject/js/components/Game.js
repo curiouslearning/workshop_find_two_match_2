@@ -27,7 +27,9 @@ class Game extends Component {
         super(props);
         this.state = {
             catAnimationType: "NORMAL",
-            currentOpacities: {}
+            currentOpacities: {},
+            dragged: {},
+            numRemainingBeforeHint: props.navigation ? props.navigation.state.params.numWrongBeforeHint : props.numWrongBeforeHint
         };
         this.sounds = {};
         this.sounds.wrong = new Sound("wrong.wav", Sound.MAIN_BUNDLE, (e) => {
@@ -57,7 +59,8 @@ class Game extends Component {
             "right",
             "wrong",
             "currentOpacity",
-            "getCat"
+            "getCat",
+            "shouldGiveHint"
         ];
         for (method of methods) {
             this[method] = this[method].bind(this);
@@ -183,12 +186,15 @@ class Game extends Component {
                 } else {
                     this.stars[this.stars.length - 1].opacity = change * i;
                 }
-                this.setState({
-                    currentOpacities: {
-                        [draggedHalf]: 1 - change * i,
-                        [overlappedHalf]: 1 - change * i
-                    }
-                });
+                this.setState((prevState, props) => {
+                    return {
+                        currentOpacities: {
+                            [draggedHalf]: 1 - change * i,
+                            [overlappedHalf]: 1 - change * i
+                        },
+                        numRemainingBeforeHint: props.numWrongBeforeHint
+                    };
+                })
             }, time * i);
         }
     }
@@ -196,8 +202,12 @@ class Game extends Component {
     wrong() {
         console.log("wrong!");
         this.sounds.wrong.play();
-        this.setState({
-            catAnimationType: "ANGRY"
+        console.log(this.state.numRemainingBeforeHint);
+        this.setState((prevState, props) => {
+            return {
+                catAnimationType: "ANGRY",
+                numRemainingBeforeHint: prevState.numRemainingBeforeHint - 1
+            };
         });
         this.setTimeout(() => {
             this.setState({
@@ -232,6 +242,10 @@ class Game extends Component {
         }
     }
 
+    shouldGiveHint(pairIDs) {
+        return this.state.numRemainingBeforeHint <= 0 && pairIDs.includes(this.state.dragged.id);
+    }
+
     // create the JSX for the Game
     render() {
         const CONTENT = this.props.navigation ? this.props.navigation.state.params.content : this.props.content;
@@ -253,6 +267,7 @@ class Game extends Component {
                     getOverlappingID={this.getOverlappingID}
                     right={this.right}
                     wrong={this.wrong}
+                    shouldGiveHint={this.shouldGiveHint}
                     currentOpacity={this.currentOpacity(obj.object_id)}
                 />)}
                 {this.clouds.map((cloud, i) => <Text key={i} style={[styles.reward, {...cloud}]}>
@@ -268,6 +283,7 @@ class Game extends Component {
                     getOverlappingID={this.getOverlappingID}
                     right={this.right}
                     wrong={this.wrong}
+                    shouldGiveHint={this.shouldGiveHint}
                     currentOpacity={this.currentOpacity(obj.object_id)}
                 />)}
                 {this.stars.map((star, i) => <Text key={i} style={[styles.reward, {...star}]}>

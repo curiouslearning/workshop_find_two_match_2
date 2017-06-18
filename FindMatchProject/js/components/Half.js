@@ -109,7 +109,9 @@ class Half extends Component {
     }
 
     componentDidMount() {
-        if (this.shouldGiveHint) {
+        console.log("did mount");
+        if (this.props.shouldGiveHint(this.props.obj.pair_id)) {
+            console.log("yes");
             this.giveHint();
         }
     }
@@ -166,8 +168,8 @@ class Half extends Component {
                 var isOverlapped = true;
             }
             // also check if should provie pulse
-            if (this.props.obj.pair_id.indexOf(otherHalf.id) >= 0) {
-                this.shouldGiveHint = true;
+            //if (this.props.obj.pair_id.indexOf(otherHalf.id) >= 0) {
+            if (this.props.shouldGiveHint(this.props.obj.pair_id)) {
                 this.giveHint();
             }
             this.possibleOverlap.next({
