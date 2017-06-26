@@ -23,6 +23,12 @@ const CLOUD = "\u2601";
 const STAR = "\u2605";
 const WinText = "¡Tú ganas!";
 
+const SOUNDS = {
+    background: "background.mp3",
+    wrong: "wrong.wav",
+    right: "right.wav"
+}
+
 class Game extends Component {
     constructor(props) {
         super(props);
@@ -33,16 +39,13 @@ class Game extends Component {
             numRemainingBeforeHint: props.navigation ? props.navigation.state.params.numWrongBeforeHint : props.numWrongBeforeHint
         };
         this.sounds = {};
-        this.sounds.wrong = new Sound("wrong.wav", Sound.MAIN_BUNDLE, (e) => {
-            if (e) {
-              console.log("error", e);
-            }
-        });
-        this.sounds.background = new Sound("background.mp3", Sound.MAIN_BUNDLE, (e) => {
-            if (e) {
-              console.log("error", e);
-            }
-        });
+        for (sound in SOUNDS) {
+            this.sounds[sound] = new Sound(SOUNDS[sound], Sound.MAIN_BUNDLE, (e) => {
+                if (e) {
+                  console.log("error", e);
+                }
+            });
+        }
         let left = props.navigation ? props.navigation.state.params.content.left : this.props.content.left;
         left.forEach((half) => {
             let lowered = half.target.toLowerCase();
@@ -161,6 +164,7 @@ class Game extends Component {
     // for the user whether their answer was right or wrong
     right(position) {
         console.log("right!");
+        this.sounds.right.play();
         var draggedHalf = this.state.dragged.id;
         var overlappedHalf = this.overlappingID;
         this.sounds[this.state.dragged.target].play();
@@ -208,7 +212,6 @@ class Game extends Component {
     wrong() {
         console.log("wrong!");
         this.sounds.wrong.play();
-        console.log(this.state.numRemainingBeforeHint);
         this.setState((prevState, props) => {
             return {
                 catAnimationType: "ANGRY",

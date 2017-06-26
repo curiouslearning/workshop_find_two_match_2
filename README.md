@@ -7,4 +7,5 @@ Developed by Deanna Heer (with help from the Curious Learning team)
 - Arrows chosen from [here](xahlee.info/comp/unicode_arrows.html).
 ### Sounds
 - Wrong Sound (`wrong.wav`) from [SgtPepperArc360 on freesound.org](https://www.freesound.org/people/SgtPepperArc360/sounds/341732/).
-- Background Sound (`Background.mp3`) from [willy_ineedthatapp_com on freesound.org](https://freesound.org/people/willy_ineedthatapp_com/sounds/167328/)
+- Background Sound (`background.mp3`) from [willy_ineedthatapp_com on freesound.org](https://freesound.org/people/willy_ineedthatapp_com/sounds/167328/).
+- Right Sound (`right.wav`) from [Wagna on freesound.org](https://freesound.org/people/Wagna/sounds/325805/).
