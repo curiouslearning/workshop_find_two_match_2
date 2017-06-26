@@ -7,6 +7,7 @@ import {
     Dimensions,
     View,
     Text,
+    TouchableWithoutFeedback,
     StyleSheet
 } from "react-native";
 import ReactMixin from "react-mixin";
@@ -33,6 +34,11 @@ class Game extends Component {
         };
         this.sounds = {};
         this.sounds.wrong = new Sound("wrong.wav", Sound.MAIN_BUNDLE, (e) => {
+            if (e) {
+              console.log("error", e);
+            }
+        });
+        this.sounds.background = new Sound("background.mp3", Sound.MAIN_BUNDLE, (e) => {
             if (e) {
               console.log("error", e);
             }
@@ -246,6 +252,10 @@ class Game extends Component {
         return this.state.numRemainingBeforeHint <= 0 && pairIDs.includes(this.state.dragged.id);
     }
 
+    onBackgroundPress = (e) => {
+        this.sounds.background.play();
+    }
+
     // create the JSX for the Game
     render() {
         const CONTENT = this.props.navigation ? this.props.navigation.state.params.content : this.props.content;
@@ -254,8 +264,12 @@ class Game extends Component {
         const RIGHT = CONTENT.right;
         return (
             <View style={[styles.containerView, {flex: FractionOfHeight}]}>
-                <View style={styles.leftView} />
-                <View style={styles.rightView} />
+                <TouchableWithoutFeedback onPress={this.onBackgroundPress}>
+                    <View style={styles.leftView} />
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={this.onBackgroundPress}>
+                    <View style={styles.rightView} />
+                </TouchableWithoutFeedback>
                 {this.getCat()}
                 {LEFT.map(obj => <Half
                     obj={obj}
