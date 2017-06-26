@@ -57,6 +57,7 @@ class Half extends Component {
             onStartShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponder: () => true,
             onPanResponderGrant: () => {
+                this.props.playSound(this.props.obj.target);
                 this.setState({isBeingDragged: true});
                 this.props.beingDragged(
                     this.props.obj.object_id,

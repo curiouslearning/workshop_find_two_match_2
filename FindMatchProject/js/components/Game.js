@@ -59,6 +59,7 @@ class Game extends Component {
         this.clouds = [];
         this.stars = [];
         var methods = [
+            "playSoundForHalf",
             "leftBeingDragged",
             "rightBeingDragged",
             "doneBeingDragged",
@@ -74,6 +75,12 @@ class Game extends Component {
         for (method of methods) {
             this[method] = this[method].bind(this);
         }
+    }
+
+    // Given an obj's target, plays its corresponding sound
+    playSoundForHalf(target) {
+        let lowered = target.toLowerCase();
+        this.sounds[lowered].play();
     }
 
     // Following methods will be used by the Halfs
@@ -278,6 +285,7 @@ class Game extends Component {
                     obj={obj}
                     key={obj.object_id}
                     fractionOfHeight={FractionOfHeight}
+                    playSound={this.playSoundForHalf}
                     beingDragged={this.leftBeingDragged}
                     doneBeingDragged={this.doneBeingDragged}
                     possibleOverlap={this.possibleOverlapOnLeftSide}
@@ -294,6 +302,7 @@ class Game extends Component {
                     obj={obj}
                     key={obj.object_id}
                     fractionOfHeight={FractionOfHeight}
+                    playSound={this.playSoundForHalf}
                     beingDragged={this.rightBeingDragged}
                     doneBeingDragged={this.doneBeingDragged}
                     possibleOverlap={this.possibleOverlapOnRightSide}
