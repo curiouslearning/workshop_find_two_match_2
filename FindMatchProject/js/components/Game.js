@@ -26,7 +26,9 @@ const WinText = "¡Tú ganas!";
 const SOUNDS = {
     background: "background.mp3",
     wrong: "wrong.wav",
-    right: "right.wav"
+    right: "right.wav",
+    tu: "tu.mp3",
+    ganas: "ganas.mp3"
 }
 
 class Game extends Component {
@@ -196,6 +198,9 @@ class Game extends Component {
                     let matchedPairs = this.clouds.length + this.stars.length;
                     if (numPairs == matchedPairs) {
                         this.setState({won: true});
+                        this.sounds.tu.play(() => {
+                            this.sounds.ganas.play();
+                        });
                     }
                 }
                 if (isLeft) {
