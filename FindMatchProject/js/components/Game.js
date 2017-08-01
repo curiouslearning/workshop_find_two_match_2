@@ -27,8 +27,8 @@ const SOUNDS = {
     background: "background.mp3",
     wrong: "wrong.wav",
     right: "right.wav",
-    tu: "tu.mp3",
-    ganas: "ganas.mp3"
+    tu: "tu.mp3", // you
+    ganas: "ganas.mp3" // (you) win
 }
 
 class Game extends Component {
@@ -111,7 +111,7 @@ class Game extends Component {
     doneBeingDragged() {
         this.overlappingID = undefined;
         this.setState({
-            dragged: undefined
+            dragged: {}
         });
     }
 

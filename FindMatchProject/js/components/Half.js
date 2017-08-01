@@ -21,7 +21,8 @@ class Half extends Component {
             top: props.obj.pos[1],
             left: props.obj.pos[0],
             isBeingDragged: false,
-            scale: new Animated.Value(1.00)
+            scale: new Animated.Value(1.00),
+            givingHint: false,
         };
         this.size = Dimensions.get("window").height * this.props.fractionOfHeight / 4;
         this.originalLeft = this.props.obj.pos[0];
@@ -106,13 +107,31 @@ class Half extends Component {
                 easing: Easing.linear
             })
         ]);
-        this.pulse.start(() => this.giveHint());
+        this.setState({
+            givingHint: true,
+        });
+        this.pulse.start(() => {
+            if (this.props.shouldGiveHint(this.props.obj.pair_id)) {
+                this.giveHint();
+            } else {
+                this.setState({
+                    givingHint: false,
+                    scale: new Animated.Value(1.00),
+                });
+            }
+        });
     }
 
     componentDidMount() {
-        console.log("did mount");
         if (this.props.shouldGiveHint(this.props.obj.pair_id)) {
-            console.log("yes");
+            this.giveHint();
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let shouldGive = nextProps.shouldGiveHint(this.props.obj.pair_id);
+        if (!this.state.givingHint && shouldGive) {
+            // we should start giving hint
             this.giveHint();
         }
     }
@@ -167,11 +186,6 @@ class Half extends Component {
             let distance = Math.sqrt((l2 - l1)*(l2 - l1) + (t2 - t1)*(t2 - t1));
             if (distance < this.size) {
                 var isOverlapped = true;
-            }
-            // also check if should provie pulse
-            //if (this.props.obj.pair_id.indexOf(otherHalf.id) >= 0) {
-            if (this.props.shouldGiveHint(this.props.obj.pair_id)) {
-                this.giveHint();
             }
             this.possibleOverlap.next({
                 isOverlap: isOverlapped,
